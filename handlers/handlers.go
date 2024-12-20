@@ -2,63 +2,58 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 func HelloHandler(w http.ResponseWriter, req *http.Request) {
-	// GETメソッドなら
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Hello, World!\n")
-	} else {
-		// GETメソッド以外は405
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Hello World!\n")
 }
 
 func PostArticleHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Article...\n")
-	} else {
-		// POSTメソッド以外は405
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Article...\n")
 }
 
+// ArticleListHandler GET /article/list のハンドラ
 func ArticleListHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodGet {
-		io.WriteString(w, "Article List\n")
+	// reqから、クエリパラメータの値を取り出したい
+	queryMap := req.URL.Query()
+
+	var page int
+	// パラメータ page が1個以上あるなら
+	if p, ok := queryMap["page"]; ok && len(p) > 0 {
+		var err error
+		page, err = strconv.Atoi(p[0])
+		if err != nil {
+			http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+			return
+		}
 	} else {
-		// GETメソッド以外は405
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+		page = 1
 	}
+	resString := fmt.Sprintf("ArticleList (page %d)\n", page)
+	io.WriteString(w, resString)
 }
 
 func ArticleDetailHandler(w http.ResponseWriter, req *http.Request) {
-	articleID := 1
-	resString := fmt.Sprintf("Article No.%d\n", articleID)
-	if req.Method == http.MethodGet {
-		io.WriteString(w, resString)
-	} else {
-		// GETメソッド以外は405
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
+	// Var: パスパラメータをMapで返却する (map[id: 1234])
+	articleID, err := strconv.Atoi(mux.Vars(req)["id"])
+
+	// int変換できない場合、つまりパラメータの値が不適切の場合は400エラー
+	if err != nil {
+		http.Error(w, "Invalid query parameter", http.StatusBadRequest)
+		return
 	}
+	resString := fmt.Sprintf("Article No.%d\n", articleID)
+	io.WriteString(w, resString)
 }
 
 func ArticleNiceHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Nice...\n")
-	} else {
-		// POSTメソッド以外は405
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Nice...\n")
 }
 
 func ArticleCommentHandler(w http.ResponseWriter, req *http.Request) {
-	if req.Method == http.MethodPost {
-		io.WriteString(w, "Posting Comment...\n")
-	} else {
-		// POSTメソッド以外は405
-		http.Error(w, "Invalid method", http.StatusMethodNotAllowed)
-	}
+	io.WriteString(w, "Posting Comment...\n")
 }
