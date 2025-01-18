@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"go-practice-hands/handlers"
 	"log"
@@ -51,7 +52,15 @@ func main() {
 		CreatedAt:   time.Now(),
 	}
 
-	fmt.Printf("%+v\n", article)
+	// jsonエンコード
+	jsonData, err := json.Marshal(article)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Printf("%s\n", jsonData)
+
 	// Router作成
 	r := mux.NewRouter()
 
