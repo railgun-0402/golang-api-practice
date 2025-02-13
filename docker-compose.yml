@@ -21,10 +21,10 @@ services:
 
     # コンテナ内で使用する環境変数の値を指定
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: sampledb
-      MYSQL_USER: user
-      MYSQL_PASSWORD: pass
+      MYSQL_ROOT_PASSWORD: ${ROOTPASS}
+      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_USER: ${USERNAME}
+      MYSQL_PASSWORD: ${USERPASS}
       TZ: "Asia/Tokyo"
 
     ports:
