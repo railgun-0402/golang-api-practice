@@ -7,3 +7,33 @@ services:
       - 8080:8080
     volumes:
       - .:/app
+
+  mysql:
+    platform: linux/x86_64
+    image: mysql:8.0
+    container_name: db-for-go
+
+    # MySQLの設定値を指定
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --sql-mode=ONLY_FULL_GROUP_BY,NO_ENGINE_SUBSTITUTION
+
+    # コンテナ内で使用する環境変数の値を指定
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sampledb
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+      TZ: "Asia/Tokyo"
+
+    ports:
+      - "3306:3306"
+
+    # コンテナ内のMySQLに格納するデータを永続化させるために使用するボリュームを指定
+    volumes:
+      - db-volume:/var/lib/mysql
+
+# ボリューム作成
+volumes:
+  db-volume:
