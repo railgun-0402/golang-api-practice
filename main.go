@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"go-practice-hands/models"
-	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -27,33 +26,26 @@ func main() {
 	}
 	defer db.Close()
 
-	const sqlStr = `select * from articles;`
-	rows, err := db.Query(sqlStr)
+	articleId := 1
+	const sqlStr = `select * from articles where article_id = ?;`
+	row := db.QueryRow(sqlStr, articleId)
+
+	// データ取得件数が0件の場合は終了
+	if err := row.Err(); err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var article models.Article
+	var createdTime sql.NullTime
+	err = row.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	defer rows.Close()
 
-	articleArr := make([]models.Article, 0)
-	for rows.Next() {
-		var article models.Article
-		var createdTime sql.NullTime
-		err := rows.Scan(&article.ID, &article.Title, &article.Contents, &article.UserName, &article.NiceNum, &createdTime)
-
-		// Nullでなければ、time.Timeに変換
-		if createdTime.Valid {
-			article.CreatedAt = createdTime.Time
-		} else {
-			article.CreatedAt = time.Time{}
-		}
-
-		if err != nil {
-			fmt.Println(err)
-		} else {
-			// article を articleArr に追加
-			articleArr = append(articleArr, article)
-		}
+	if createdTime.Valid {
+		article.CreatedAt = createdTime.Time
 	}
-	fmt.Printf("%+v\n", articleArr)
+	fmt.Printf("%+v\n", article)
 }
