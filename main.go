@@ -26,6 +26,22 @@ func main() {
 	}
 	defer db.Close()
 
+	insertArticle := models.Article {
+		Title: "insert test",
+		Contents: "Can I insert data correctly?",
+		UserName: "seki",
+	}
+
+	const insertSqlStr = `insert into articles (title, contents, username, nice, created_at) values(?, ?, ?, 0, now());`
+	result, err := db.Exec(insertSqlStr, insertArticle.Title, insertArticle.Contents, insertArticle.UserName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(result.LastInsertId()) // 何番目のデータかを見る
+	fmt.Println(result.RowsAffected()) // DBに何行の変更が行われたか見る
+
 	articleId := 1
 	const sqlStr = `select * from articles where article_id = ?;`
 	row := db.QueryRow(sqlStr, articleId)
