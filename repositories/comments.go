@@ -3,7 +3,7 @@ package repositories
 import (
 	"database/sql"
 
-	"github.com/railgun-0402/golang-api-practice/models/"
+	"go-practice-hands/models"
 )
 
 // 新規投稿をDBにinsertする関数
