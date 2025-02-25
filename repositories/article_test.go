@@ -29,7 +29,7 @@ func connectDB() (*sql.DB, error) {
 	}
 	return db, nil
 }
-
+// TODO: テストケースを増やす
 func TestSelectArticleDetail(t *testing.T) {
 	// DB接続
 	db, err := connectDB()
