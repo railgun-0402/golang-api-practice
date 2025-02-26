@@ -50,7 +50,7 @@ func TestSelectArticleDetail(t *testing.T) {
 				Title: "firstPost",
 				Contents: "This is my first blog",
 				UserName: "saki",
-				NiceNum: 2,
+				NiceNum: 3,
 			},
 		},
 		{
@@ -66,6 +66,7 @@ func TestSelectArticleDetail(t *testing.T) {
 	}
 
 	for _, test := range tests {
+		// Runでサブテストを書く
 		t.Run(test.testTitle, func(t *testing.T) {
 			// テスト対象クラスを実行
 			got, err := repositories.SelectArticleDetail(db, test.expected.ID)
