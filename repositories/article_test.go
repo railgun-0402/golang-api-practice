@@ -95,3 +95,25 @@ func TestSelectArticleDetail(t *testing.T) {
 	// 成功
 
 }
+
+// SelectArticleList関数のテスト
+func SelectArticleList(t *testing.T) {
+	// DB接続
+	db, err := connectDB()
+	if err != nil {
+		// DB接続が失敗したらテスト失敗・終了
+		t.Fatal(err)
+	}
+	defer db.Close()
+
+	expectedNum := 2
+	got, err := repositories.SelectArticleList(db, 1)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if num := len(got); num != expectedNum {
+		t.Errorf("want %d but got %d articles\n", expectedNum, num)
+	}
+}
+
