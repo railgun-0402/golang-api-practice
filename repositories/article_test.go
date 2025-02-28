@@ -1,8 +1,6 @@
 package repositories_test
 
 import (
-	"database/sql"
-	"fmt"
 	"testing"
 
 	"go-practice-hands/models"
@@ -11,34 +9,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const (
-	dbUser = "user"
-	dbPassword = "pass"
-	dbPort = "3306"
-	dbHost = "localhost"
-	dbName = "sampledb"
-)
-
-// DB接続
-func connectDB() (*sql.DB, error) {
-	dbConn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
-
-	db, err := sql.Open("mysql", dbConn)
-	if err != nil {
-		return nil, fmt.Errorf("DB接続エラー: %w", err)
-	}
-	return db, nil
-}
-
 func TestSelectArticleDetail(t *testing.T) {
-	// DB接続
-	db, err := connectDB()
-	if err != nil {
-		// DB接続が失敗したらテスト失敗・終了
-		t.Fatal(err)
-	}
-	defer db.Close()
-
 	tests := []struct {
 		testTitle string
 		expected models.Article
@@ -69,7 +40,7 @@ func TestSelectArticleDetail(t *testing.T) {
 		// Runでサブテストを書く
 		t.Run(test.testTitle, func(t *testing.T) {
 			// テスト対象クラスを実行
-			got, err := repositories.SelectArticleDetail(db, test.expected.ID)
+			got, err := repositories.SelectArticleDetail(testDB, test.expected.ID)
 			if err != nil {
 				// 関数の実行自体が失敗：テスト失敗
 				t.Fatal(err)
@@ -97,17 +68,9 @@ func TestSelectArticleDetail(t *testing.T) {
 }
 
 // SelectArticleList関数のテスト
-func SelectArticleList(t *testing.T) {
-	// DB接続
-	db, err := connectDB()
-	if err != nil {
-		// DB接続が失敗したらテスト失敗・終了
-		t.Fatal(err)
-	}
-	defer db.Close()
-
-	expectedNum := 2
-	got, err := repositories.SelectArticleList(db, 1)
+func TestSelectArticleList(t *testing.T) {
+	expectedNum := 3
+	got, err := repositories.SelectArticleList(testDB, 1)
 	if err != nil {
 		t.Fatal(err)
 	}
