@@ -1,6 +1,7 @@
 package repositories_test
 
 import (
+	"fmt"
 	"testing"
 
 	"go-practice-hands/models"
@@ -78,5 +79,34 @@ func TestSelectArticleList(t *testing.T) {
 	if num := len(got); num != expectedNum {
 		t.Errorf("want %d but got %d articles\n", expectedNum, num)
 	}
+}
+
+// InsertArticle関数のテスト
+func TestInsertArticle(t *testing.T) {
+	article := models.Article {
+		Title: "insertTest",
+		Contents: "testtest",
+		UserName: "saki",
+	}
+
+	expectedArticleNum := 10
+	newArticle, err := repositories.InsertArticle(testDB, article)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if newArticle.ID != expectedArticleNum {
+		t.Errorf("new article id is expected %d but got %d\n", expectedArticleNum, newArticle.ID)
+	}
+
+	t.Cleanup(func() {
+		fmt.Println("delete start")
+		const sqlStr = `
+		delete from articles
+		where title = ? and contents = ? and username = ?
+		`
+		testDB.Exec(sqlStr, article.Title, article.Contents, article.UserName)
+		fmt.Println("delete end")
+	})
 }
 
