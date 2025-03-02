@@ -28,13 +28,21 @@ func TestMain(m *testing.M) {
 	teardown()
 }
 
+func connectDB() error {
+	var err error
+
+	dbConn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
+	testDB, err = sql.Open("mysql", dbConn)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // テストの前処理
 func setup() error {
-	dbConn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", dbUser, dbPassword, dbHost, dbPort, dbName)
-
-	var err error
-	testDB, err = sql.Open("mysql", dbConn)
-	if err != nil {
+	if err := connectDB(); err != nil {
 		return err
 	}
 	return nil
