@@ -5,6 +5,7 @@ import (
 	"go-practice-hands/repositories"
 )
 
+// 記事の詳細を取得するサービスクラス
 func GetArticleService(articleID int) (models.Article, error) {
 
 	db, err := connectDB()
@@ -28,3 +29,5 @@ func GetArticleService(articleID int) (models.Article, error) {
 	article.CommentList = append(article.CommentList, commentList...)
 	return article, nil
 }
+
+// TODO: 記事やいいね数を取得するServiceメソッドを作成する
