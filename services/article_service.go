@@ -31,3 +31,21 @@ func GetArticleService(articleID int) (models.Article, error) {
 }
 
 // TODO: 記事やいいね数を取得するServiceメソッドを作成する
+func PostArticleService(article models.Article) (models.Article, error) {
+	// TODO : 実装
+	return models.Article{}, nil
+}
+
+// ArticleListHandler で使うことを想定したサービス
+// 指定 page の記事一覧を返却
+func GetArticleListService(page int) ([]models.Article, error) {
+	// TODO : 実装
+	return nil, nil
+}
+
+// PostNiceHandler で使うことを想定したサービス
+// 指定 ID の記事のいいね数を+1 して、結果を返却
+func PostNiceService(article models.Article) (models.Article, error) {
+	// TODO : 実装
+	return models.Article{}, nil
+}
