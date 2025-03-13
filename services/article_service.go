@@ -30,10 +30,23 @@ func GetArticleService(articleID int) (models.Article, error) {
 	return article, nil
 }
 
-// TODO: 記事やいいね数を取得するServiceメソッドを作成する
+// PostArticleHandler で使うことを想定したサービス
+// 引数の情報をもとに新しい記事を作り、結果を返却
 func PostArticleService(article models.Article) (models.Article, error) {
 	// TODO : 実装
-	return models.Article{}, nil
+	db, err := connectDB()
+	if err != nil {
+		return models.Article{}, err
+	}
+	defer db.Close()
+
+	// repositories層から記事データを取得
+	articleData, err := repositories.InsertArticle(db, article)
+	if err != nil {
+		return models.Article{}, err
+	}
+
+	return articleData, nil
 }
 
 // ArticleListHandler で使うことを想定したサービス
