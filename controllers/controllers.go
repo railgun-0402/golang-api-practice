@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"go-practice-hands/controllers/services"
 	"go-practice-hands/models"
-	"go-practice-hands/services"
 	"io"
 	"net/http"
 	"strconv"
@@ -12,11 +12,11 @@ import (
 )
 
 type MyAppController struct {
-	service *services.MyAppService
+	service services.MyAppServicer
 }
 
 // コンストラクター
-func NewMyAppController(s *services.MyAppService) *MyAppController {
+func NewMyAppController(s services.MyAppServicer) *MyAppController {
 	return &MyAppController{service: s}
 }
 
