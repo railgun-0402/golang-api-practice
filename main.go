@@ -3,9 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"go-practice-hands/controllers"
-	"go-practice-hands/routers"
-	"go-practice-hands/services"
+	"go-practice-hands/api"
 	"log"
 	"net/http"
 
@@ -29,10 +27,7 @@ func main() {
 		return
 	}
 
-	service := services.NewMyAppService(db)
-	con := controllers.NewMyAppController(service)
-
-	r := routers.NewRouter(con)
+	r := api.NewRouter(db)
 
 	log.Println("server start at port 8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
