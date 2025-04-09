@@ -1,6 +1,9 @@
 package services
 
 import (
+	"database/sql"
+	"errors"
+	"go-practice-hands/apperrors"
 	"go-practice-hands/models"
 	"go-practice-hands/repositories"
 )
@@ -8,16 +11,21 @@ import (
 // 記事の詳細を取得するサービスクラス
 func (s *MyAppService) GetArticleService(articleID int) (models.Article, error) {
 
-
 	// repositories層から記事詳細を取得
 	article, err := repositories.SelectArticleDetail(s.db, articleID)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			err = apperrors.NAData.Wrap(err, "no data")
+			return models.Article{}, err
+		}
+		err = apperrors.GetDataFailed.Wrap(err, "fail to get data")
 		return models.Article{}, err
 	}
 
 	// 次はコメント一覧
 	commentList, err := repositories.SelectCommentList(s.db, articleID)
 	if err != nil {
+		err = apperrors.GetDataFailed.Wrap(err, "fail to get data")
 		return models.Article{}, err
 	}
 
@@ -31,6 +39,7 @@ func (s *MyAppService) PostArticleService(article models.Article) (models.Articl
 	// repositories層から記事データを取得
 	articleData, err := repositories.InsertArticle(s.db, article)
 	if err != nil {
+		err = apperrors.InsertDataFailed.Wrap(err, "fail to record data")
 		return models.Article{}, err
 	}
 
