@@ -52,7 +52,13 @@ func (s *MyAppService) GetArticleListService(page int) ([]models.Article, error)
 
 	article, err := repositories.SelectArticleList(s.db, page)
 	if err != nil {
+		err = apperrors.GetDataFailed.Wrap(err, "fail to get data")
 		return []models.Article{}, err
+	}
+
+	if len(article) == 0 {
+		err := apperrors.NAData.Wrap(ErrNoData, "no data")
+		return nil, err
 	}
 	return article, nil
 }
