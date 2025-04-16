@@ -12,4 +12,8 @@ const (
 	GetDataFailed ErrCode = "S002"
 	// Select失敗(データ0件)
 	NAData ErrCode = "S003"
+	// 該当データなし
+	NoTargetData ErrCode = "S004"
+	// 更新失敗
+	UpdateDataFailed ErrCode = "S005"
 )

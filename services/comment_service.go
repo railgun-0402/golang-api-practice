@@ -1,6 +1,7 @@
 package services
 
 import (
+	"go-practice-hands/apperrors"
 	"go-practice-hands/models"
 	"go-practice-hands/repositories"
 )
@@ -10,6 +11,7 @@ func (s *MyAppService) PostCommentService(comment models.Comment) (models.Commen
 
 	comments, err := repositories.InsertComment(s.db, comment)
 	if err != nil {
+		err = apperrors.InsertDataFailed.Wrap(err, "fail to record data")
 		return models.Comment{}, err
 	}
 

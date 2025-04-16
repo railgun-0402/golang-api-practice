@@ -69,6 +69,11 @@ func (s *MyAppService) PostNiceService(article models.Article) (models.Article, 
 
 	dbErr := repositories.UpdateNiceNum(s.db, article.ID)
 	if dbErr != nil {
+		if errors.Is(dbErr, sql.ErrNoRows) {
+			dbErr = apperrors.NoTargetData.Wrap(dbErr, "does not exist target article")
+			return models.Article{}, dbErr
+		}
+		dbErr = apperrors.UpdateDataFailed.Wrap(dbErr, "fail to update nice count")
 		return models.Article{}, dbErr
 	}
 	return models.Article{}, nil
