@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"go-practice-hands/apperrors"
 	"go-practice-hands/controllers/services"
 	"go-practice-hands/models"
 	"io"
@@ -30,6 +31,7 @@ func (c *ArticleController) PostArticleHandler(w http.ResponseWriter, req *http.
 	var reqArticle models.Article
 	// jsonバイト列をデコード
 	if err := json.NewDecoder(req.Body).Decode(&reqArticle); err != nil {
+		err = apperrors.ReqBodyDecodeFailed.Wrap(err, "bad request body")
 		http.Error(w, "fail to decode json\n", http.StatusBadRequest)
 	}
 
@@ -53,6 +55,7 @@ func (c *ArticleController) ArticleListHandler(w http.ResponseWriter, req *http.
 		var err error
 		page, err = strconv.Atoi(p[0])
 		if err != nil {
+			err = apperrors.BadParam.Wrap(err, "queryparam must be number")
 			http.Error(w, "Invalid query parameter", http.StatusBadRequest)
 			return
 		}
@@ -75,6 +78,7 @@ func (c *ArticleController) ArticleDetailHandler(w http.ResponseWriter, req *htt
 
 	// int変換できない場合、つまりパラメータの値が不適切の場合は400エラー
 	if err != nil {
+		err = apperrors.BadParam.Wrap(err, "Invalid query parameter")
 		http.Error(w, "Invalid query parameter", http.StatusBadRequest)
 		return
 	}
@@ -92,6 +96,7 @@ func (c *ArticleController) ArticleDetailHandler(w http.ResponseWriter, req *htt
 func (c *ArticleController) PostNiceHandler(w http.ResponseWriter, req *http.Request) {
 	var reqArticle models.Article
 	if err := json.NewDecoder(req.Body).Decode(&reqArticle); err != nil {
+		err = apperrors.ReqBodyDecodeFailed.Wrap(err, "bad request body")
 		http.Error(w, "fail to decode json\n", http.StatusBadRequest)
 	}
 

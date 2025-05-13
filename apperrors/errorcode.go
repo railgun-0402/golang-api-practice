@@ -16,4 +16,8 @@ const (
 	NoTargetData ErrCode = "S004"
 	// 更新失敗
 	UpdateDataFailed ErrCode = "S005"
+
+	// Controller層で出るエラー
+	ReqBodyDecodeFailed ErrCode = "R001"
+	BadParam ErrCode = "R002"
 )
